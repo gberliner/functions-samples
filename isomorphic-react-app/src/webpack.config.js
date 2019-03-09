@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 // Sample Webpack Configuration
 const path = require('path');
 
@@ -21,11 +22,11 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
     alias: {
-      'firebase-database': path.resolve(__dirname, '../functions/firebase-database'),
-    },
+      'firebase-database': path.resolve(__dirname, '../functions/firebase-database')
+    }
   },
   resolveLoader: {
-    modules: [path.resolve(__dirname, "./node_modules")],
+    modules: [path.resolve(__dirname, "./node_modules")]
   },
   module: {
     rules: [{
@@ -35,3 +36,4 @@ module.exports = {
     }]
   }
 };
+//# sourceMappingURL=webpack.config.js.map

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
@@ -15,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Sample Webpack Configuration for Server Bundle
-const baseConfig = require('./webpack.config');
 
-const path = require('path'); // Note that since this is for the server, it is important to
-// set the target to node and set the libraryTarget to commonjs2
+// Sample Webpack Configuration
+const path = require('path');
 
-
-module.exports = Object.assign({}, {
-  target: 'node',
-  entry: './containers/ServerApp.js',
-  output: {
-    filename: 'server.bundle.js',
-    path: path.resolve(__dirname, '../functions/build'),
-    libraryTarget: 'commonjs2'
+module.exports = {
+  resolve: {
+    extensions: [".js", ".jsx"],
+    alias: {
+      'firebase-database': path.resolve(__dirname, '../functions/firebase-database'),
+    },
+  },
+  resolveLoader: {
+    modules: [path.resolve(__dirname, "./node_modules")],
+  },
+  module: {
+    rules: [{
+      test: /\.(js|jsx)$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader'
+    }]
   }
-}, baseConfig);
-//# sourceMappingURL=webpack.server.config.js.map
+};

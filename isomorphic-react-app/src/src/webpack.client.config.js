@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
@@ -15,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Sample Webpack Configuration for Server Bundle
+
+// Sample Webpack Configuration for Client Bundle
 const baseConfig = require('./webpack.config');
-
-const path = require('path'); // Note that since this is for the server, it is important to
-// set the target to node and set the libraryTarget to commonjs2
-
+const path = require('path');
 
 module.exports = Object.assign({}, {
-  target: 'node',
-  entry: './containers/ServerApp.js',
+  entry: './containers/ClientApp.js',
   output: {
-    filename: 'server.bundle.js',
-    path: path.resolve(__dirname, '../functions/build'),
-    libraryTarget: 'commonjs2'
+    filename: 'client.bundle.js',
+    path: path.resolve(__dirname, '../public/assets')
   }
 }, baseConfig);
-//# sourceMappingURL=webpack.server.config.js.map

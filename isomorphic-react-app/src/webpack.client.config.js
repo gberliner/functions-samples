@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
@@ -13,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 // Sample Webpack Configuration for Client Bundle
 const baseConfig = require('./webpack.config');
+
 const path = require('path');
 
 module.exports = Object.assign({}, {
@@ -25,3 +27,4 @@ module.exports = Object.assign({}, {
     path: path.resolve(__dirname, '../public/assets')
   }
 }, baseConfig);
+//# sourceMappingURL=webpack.client.config.js.map
