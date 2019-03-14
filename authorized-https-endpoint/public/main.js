@@ -96,7 +96,7 @@ Demo.prototype.signOut = function() {
 
 // Does an authenticated request to a Firebase Functions endpoint using an Authorization header.
 Demo.prototype.startFunctionsRequest = function() {
-  firebase.auth().currentUser.getIdToken().then((token) => {
+  firebase.auth().currentUser.getIdToken(true).then((token) => {
     const auth2 = gapi.auth2.getAuthInstance();
     const rc = this.responseContainer;
     const userUrl = this.helloUserUrl;
