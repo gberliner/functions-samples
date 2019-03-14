@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 'use strict';
-
+const {OAuth2Client} = require("google-auth-library")
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
@@ -59,6 +59,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
     console.log('ID Token correctly decoded', decodedIdToken);
     req.user = decodedIdToken;
+    
     next();
     return;
   } catch (error) {
@@ -71,11 +72,41 @@ const validateFirebaseIdToken = async (req, res, next) => {
 app.use(cors);
 app.use(cookieParser);
 app.use(validateFirebaseIdToken);
-app.get('/hello', (req, res) => {
-  res.send(`Hello ${req.user.name}`);
+app.post('/hello', (req, res) => {
+  console.log("handling POST request")
+  if ("id_token" in req.body) {
+    console.log("response body: " + req.body["id_token"]);
+  } else {
+    console.log("not sure wtf this request body");
+  }
+  
+  //var userJsonObj = JSON.parse(req.body);
+  if ("id_token" in req.body) {
+    var userIdToken = req.body["id_token"];
+    var clientId =       "145312058396-emkt8c08pfh3lg6goiih40b7an761ket.apps.googleusercontent.com";
+
+    const client = new OAuth2Client(clientId);
+    async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: userIdToken,
+          audience: clientId,  // Specify the CLIENT_ID of the app that accesses the backend
+          // Or, if multiple clients access the backend:
+          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const payload = ticket.getPayload();
+      // If request specified a G Suite domain:
+      const hostedDomain = payload['hd'];
+      console.log("user gsuite domain: " + hostedDomain)
+    }
+    verify().catch(console.error);
+  }
+  var jsonresponse = {responsetext: `Hello ${req.user.name}`};
+  console.log("sending json: " + JSON.stringify(jsonresponse));
+  res.send(jsonresponse);
 });
 
 // This HTTPS endpoint can only be accessed by your Firebase Users.
 // Requests need to be authorized by providing an `Authorization` HTTP header
 // with value `Bearer <Firebase ID Token>`.
 exports.app = functions.https.onRequest(app);
+functions.https.onRequest()
