@@ -71,8 +71,10 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
 app.use(cors);
 app.use(cookieParser);
-app.use(validateFirebaseIdToken);
+//app.use(validateFirebaseIdToken);
 app.post('/hello', (req, res) => {
+  var userSubject = "heyyou";
+
   console.log("handling POST request")
   if ("id_token" in req.body) {
     console.log("response body: " + req.body["id_token"]);
@@ -86,22 +88,33 @@ app.post('/hello', (req, res) => {
     var clientId =       "145312058396-emkt8c08pfh3lg6goiih40b7an761ket.apps.googleusercontent.com";
 
     const client = new OAuth2Client(clientId);
+    client.getAccessToken()
     async function verify() {
       const ticket = await client.verifyIdToken({
           idToken: userIdToken,
-          audience: clientId,  // Specify the CLIENT_ID of the app that accesses the backend
+          audience: clientId  // Specify the CLIENT_ID of the app that accesses the backend
           // Or, if multiple clients access the backend:
           //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+          
       });
       const payload = ticket.getPayload();
+      console.log("setting usersubject to: " + userSubject);
       // If request specified a G Suite domain:
       const hostedDomain = payload['hd'];
+      const userid = payload['email'];
+      console.log("sub claim: " + userid)
+      if ("email" in payload) {
+        userSubject = payload["email"];
+        console.log("name: " + userSubject);
+      }else{
+        userSubject = "heyyou"
+      }
       console.log("user gsuite domain: " + hostedDomain)
     }
     verify().catch(console.error);
   }
-  var jsonresponse = {responsetext: `Hello ${req.user.name}`};
-  console.log("sending json: " + JSON.stringify(jsonresponse));
+  var jsonresponse = {responsetext: userSubject};
+  console.log("sending json: ", jsonresponse);
   res.send(jsonresponse);
 });
 
